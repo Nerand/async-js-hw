@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Задание 4 — Прогресс-бар</title>
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --surface: #131722;
+      --border: #2a3040;
+      --text: #e7eaf3;
+      --primary: #3b82f6;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial;
+      background: var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: center;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, .3);
+      padding: 24px;
+      width: min(560px, 90vw);
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar {
+      height: 14px;
+      background: #0e1220;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar__fill {
+      height: 100%;
+      width: 0%;
+      background: var(--primary);
+      transition: width .35s ease;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: space-between;
+    }
+
+    .muted {
+      color: #a9b0c0;
+      font-size: 0.95rem;
+    }
+
+    .done {
+      color: #22c55e;
+      font-weight: 600;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card" role="region" aria-labelledby="title">
+    <h1 id="title" style="margin:0;">Прогресс-бар асинхронной задачи</h1>
+    <p class="muted">Задача длится 5 секунд. Каждую секунду шкала увеличивается на 20%.</p>
+
+    <div class="bar" aria-label="Прогресс" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" role="progressbar">
+      <div id="progress-fill" class="bar__fill"></div>
+    </div>
+
+    <div class="row">
+      <span id="percent">0%</span>
+      <button id="start"
+        style="padding:.5rem .9rem; border-radius:10px; background:#2563eb; color:white; border:0; cursor:pointer;">Старт</button>
+    </div>
+
+    <div id="message" class="done">Готово!</div>
+  </div>
+
+  <script>
+    const fill = document.getElementById("progress-fill");
+    const percent = document.getElementById("percent");
+    const startBtn = document.getElementById("start");
+    const bar = document.querySelector(".bar");
+    const message = document.getElementById("message");
+
+    function runTask5sec() {
+      const total = 5; // секунд
+      let i = 0;
+      message.style.display = "none";
+      percent.textContent = "0%";
+      fill.style.width = "0%";
+      bar.setAttribute("aria-valuenow", "0");
+
+      const timer = setInterval(() => {
+        i++;
+        const p = Math.min(100, i * 20);
+        fill.style.width = p + "%";
+        percent.textContent = p + "%";
+        bar.setAttribute("aria-valuenow", String(p));
+
+        if (i >= total) {
+          clearInterval(timer);
+          message.style.display = "block";
+        }
+      }, 1000);
+    }
+
+    startBtn.addEventListener("click", runTask5sec);
+  </script>
+</body>
+
+</html>
